@@ -1,4 +1,3 @@
-// user.service.ts
 import {
   Injectable,
   NotFoundException,
@@ -9,12 +8,12 @@ import {
 import { v4 as uuidv4, validate } from 'uuid';
 import { CreateUserDto, UpdatePasswordDto } from './user.dto';
 import { DB } from 'src/db/DB';
-import { ResponseUser } from 'src/types/types';
+import { ResponseUser, User } from 'src/types/types';
 
 @Injectable()
 export class UserService {
   // Replace with a database on the next weeks
-  private users = DB.users;
+  private users: User[] = DB.users;
 
   getAllUsers(): ResponseUser[] {
     // Exclude password from the response
@@ -54,7 +53,7 @@ export class UserService {
       throw new ConflictException('Username already exists');
     }
 
-    const newUser = {
+    const newUser: User = {
       id: uuidv4(),
       login,
       password,

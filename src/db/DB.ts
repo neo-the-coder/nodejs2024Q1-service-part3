@@ -26,4 +26,28 @@ export const DB = {
       updatedAt: 1709435798809,
     },
   ],
+  // Hardcoded tracks
+  tracks: [
+    {
+      id: '1553903b-f73e-40a0-a91a-2ab344d0a493',
+      name: 'Where Is the Love?',
+      artistId: 'xaxa',
+      albumId: 'haha',
+      duration: 274,
+    },
+    {
+      id: '1ce5b39e-1c0f-4759-b3b7-38b34a8744c8',
+      name: 'Bohemian Rhapsody',
+      artistId: 'xaxa',
+      albumId: 'haha',
+      duration: 355,
+    },
+    {
+      id: '952158c3-0966-43ef-bfdc-0c6b3ae5adf9',
+      name: 'Creep',
+      artistId: 'xaxa',
+      albumId: 'haha',
+      duration: 236,
+    },
+  ],
 };
