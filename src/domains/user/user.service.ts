@@ -8,7 +8,7 @@ import {
 import { v4 as uuidv4, validate } from 'uuid';
 import { CreateUserDto, UpdatePasswordDto } from './user.dto';
 import { DB } from 'src/db/DB';
-import { ResponseUser, User } from 'src/types/types';
+import { ResponseUser, User } from './user.interface';
 
 @Injectable()
 export class UserService {

@@ -7,7 +7,7 @@ import {
 import { v4 as uuidv4, validate } from 'uuid';
 import { CreateTrackDto, UpdateTrackDto } from './track.dto';
 import { DB } from 'src/db/DB';
-import { Track } from 'src/types/types';
+import { Track } from './track.interface';
 
 @Injectable()
 export class TrackService {
@@ -53,8 +53,8 @@ export class TrackService {
     const newTrack: Track = {
       id: uuidv4(),
       name,
-      artistId: 'someuuid',
-      albumId: 'someonuuid',
+      artistId: null,
+      albumId: null,
       duration,
     };
     this.tracks.push(newTrack);
