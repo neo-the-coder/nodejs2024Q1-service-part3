@@ -50,4 +50,22 @@ export const DB = {
       duration: 236,
     },
   ],
+  // Hardcoded tracks
+  artists: [
+    {
+      id: '2a36e3fa-aec4-481c-9912-815b6d69e175',
+      name: 'Queen',
+      grammy: true,
+    },
+    {
+      id: 'c4874e51-cdac-4662-a19b-ca5d1a4c9d43',
+      name: 'Radiohead',
+      grammy: true,
+    },
+    {
+      id: '42487d12-bf93-41f2-8c0f-caf2c6e30275',
+      name: 'Ludovico Einaudi',
+      grammy: false,
+    },
+  ],
 };
