@@ -68,4 +68,31 @@ export const DB = {
       grammy: false,
     },
   ],
+  // Hardcoded tracks
+  albums: [
+    {
+      id: '9ccadffb-2834-49e7-b99a-eae961903040',
+      name: 'Greatest Hits',
+      year: 1981,
+      artistId: '2a36e3fa-aec4-481c-9912-815b6d69e175',
+    },
+    {
+      id: '7c140bb7-a3ea-4c47-901c-785fd902c359',
+      name: 'OK Computer',
+      year: 1997,
+      artistId: 'c4874e51-cdac-4662-a19b-ca5d1a4c9d43',
+    },
+    {
+      id: '57abd0ff-3103-49b5-95f6-0769c208928c',
+      name: 'Seven Days Walking: Day One',
+      year: 2019,
+      artistId: '42487d12-bf93-41f2-8c0f-caf2c6e30275',
+    },
+  ],
+  // favorites
+  favs: {
+    artists: [],
+    albums: [],
+    tracks: [],
+  },
 };
