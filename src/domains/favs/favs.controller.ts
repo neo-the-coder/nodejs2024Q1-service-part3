@@ -24,37 +24,37 @@ export class FavoriteController {
 
   @Post('track/:id')
   @HttpCode(201)
-  addToFavoritesTrack(@Param('id') id: ModifyFavoritesDtoClass) {
-    return this.favoriteService.addToFavorites('tracks', id);
+  addToFavoritesTrack(@Param() params: ModifyFavoritesDtoClass) {
+    return this.favoriteService.addToFavorites('tracks', params);
   }
 
   @Delete('track/:id')
   @HttpCode(204)
-  removeFromFavoritesTrack(@Param('id') id: ModifyFavoritesDtoClass): void {
-    return this.favoriteService.removeFromFavorites('tracks', id);
+  removeFromFavoritesTrack(@Param() params: ModifyFavoritesDtoClass): void {
+    return this.favoriteService.removeFromFavorites('tracks', params);
   }
 
   @Post('album/:id')
   @HttpCode(201)
-  addToFavoritesAlbum(@Param('id') id: ModifyFavoritesDtoClass) {
-    return this.favoriteService.addToFavorites('albums', id);
+  addToFavoritesAlbum(@Param() params: ModifyFavoritesDtoClass) {
+    return this.favoriteService.addToFavorites('albums', params);
   }
 
   @Delete('album/:id')
   @HttpCode(204)
-  removeFromFavoritesAlbum(@Param('id') id: ModifyFavoritesDtoClass): void {
-    return this.favoriteService.removeFromFavorites('albums', id);
+  removeFromFavoritesAlbum(@Param() params: ModifyFavoritesDtoClass): void {
+    return this.favoriteService.removeFromFavorites('albums', params);
   }
 
   @Post('artist/:id')
   @HttpCode(201)
-  addToFavoritesArtist(@Param('id') id: ModifyFavoritesDtoClass) {
-    return this.favoriteService.addToFavorites('artists', id);
+  addToFavoritesArtist(@Param() params: ModifyFavoritesDtoClass) {
+    return this.favoriteService.addToFavorites('artists', params);
   }
 
   @Delete('artist/:id')
   @HttpCode(204)
-  removeFromFavoritesArtist(@Param('id') id: ModifyFavoritesDtoClass): void {
-    return this.favoriteService.removeFromFavorites('artists', id);
+  removeFromFavoritesArtist(@Param() params: ModifyFavoritesDtoClass): void {
+    return this.favoriteService.removeFromFavorites('artists', params);
   }
 }
