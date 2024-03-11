@@ -1,13 +1,17 @@
-import { IsInt, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsInt, IsNotEmpty, IsOptional, IsString, IsUUID } from 'class-validator';
 
 export interface CreateTrackDto {
   name: string;
   duration: number; // integer number
+  artistId?: string;
+  albumId?: string;
 }
 
 export interface UpdateTrackDto {
   name?: string;
   duration?: number; // integer number
+  artistId?: string;
+  albumId?: string;
 }
 
 export class CreateTrackDtoClass implements CreateTrackDto {
@@ -18,6 +22,14 @@ export class CreateTrackDtoClass implements CreateTrackDto {
   @IsNotEmpty()
   @IsInt()
   duration: number;
+
+  @IsOptional()
+  @IsUUID('4')
+  artistId?: string;
+
+  @IsOptional()
+  @IsUUID('4')
+  albumId?: string;
 }
 
 export class UpdateTrackDtoClass implements UpdateTrackDto {
@@ -28,4 +40,12 @@ export class UpdateTrackDtoClass implements UpdateTrackDto {
   @IsOptional()
   @IsInt()
   duration?: number;
+
+  @IsOptional()
+  @IsUUID('4')
+  artistId?: string;
+
+  @IsOptional()
+  @IsUUID('4')
+  albumId?: string;
 }

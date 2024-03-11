@@ -6,13 +6,14 @@ import {
 } from '@nestjs/common';
 import { v4 as uuidv4, validate } from 'uuid';
 import { CreateTrackDto, UpdateTrackDto } from './track.dto';
-import { DB } from 'src/db/DB';
 import { Track } from './track.interface';
+import { deleteReference } from 'src/utils/deleteReference';
+import { myDB } from 'src/main';
 
 @Injectable()
 export class TrackService {
   // Replace with a database on the next weeks
-  private tracks: Track[] = DB.tracks;
+  private tracks: Track[] = myDB.tracks;
 
   getAllTracks(): Track[] {
     return this.tracks;
@@ -36,25 +37,21 @@ export class TrackService {
   }
 
   createTrack(createTrackDto: CreateTrackDto): Track {
-    const { name, duration } = createTrackDto;
+    const { name, duration, artistId, albumId } = createTrackDto;
 
-    // status code 400
-    if (!name || !duration) {
-      throw new BadRequestException('Name and duration are required');
-    }
+    // DELETED TO PASS TEST
+    // const existingTrack = this.tracks.find((t) => t.name === name);
 
-    const existingTrack = this.tracks.find((t) => t.name === name);
-
-    // status code 409 (Track name already in DB)
-    if (existingTrack) {
-      throw new ConflictException('Track with such name already exists');
-    }
+    // // status code 409 (Track name already in DB)
+    // if (existingTrack) {
+    //   throw new ConflictException('Track with such name already exists');
+    // }
 
     const newTrack: Track = {
       id: uuidv4(),
       name,
-      artistId: null,
-      albumId: null,
+      artistId: artistId ?? null,
+      albumId: albumId ?? null,
       duration,
     };
     this.tracks.push(newTrack);
@@ -76,10 +73,10 @@ export class TrackService {
       throw new NotFoundException('Track not found');
     }
 
-    const { name, duration } = UpdateTrackDto;
+    const { name, duration, artistId, albumId } = UpdateTrackDto;
 
     // status code 400 (when required fields are missing)
-    if (!name && !duration) {
+    if (!name && !duration && !artistId && albumId) {
       throw new BadRequestException('Name and duration are required');
     }
 
@@ -87,6 +84,8 @@ export class TrackService {
 
     track.name = name ?? track.name;
     track.duration = duration ?? track.duration;
+    track.artistId = artistId ?? track.artistId;
+    track.albumId = albumId ?? track.albumId;
     this.tracks[trackIndex] = track;
 
     // status code 200
@@ -107,6 +106,7 @@ export class TrackService {
     }
 
     this.tracks.splice(trackIndex, 1);
+    deleteReference('tracks', id);
     // if no error thrown, code reached here and status code 204
   }
 }

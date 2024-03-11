@@ -6,20 +6,20 @@ import {
   ConflictException,
 } from '@nestjs/common';
 import { ModifyFavoritesDto } from './favs.dto';
-import { DB } from 'src/db/DB';
 import { FavoritesResponse } from './favs.interface';
+import { myDB } from 'src/main';
 
 @Injectable()
 export class FavoriteService {
   // Replace with a database on the next weeks
-  private favorites: FavoritesResponse = DB.favs;
+  private favorites: FavoritesResponse = myDB.favs;
 
   getAllFavorites(): FavoritesResponse {
     return this.favorites;
   }
 
   addToFavorites(entityType: string, { id }: ModifyFavoritesDto): string {
-    const entityList = DB[entityType];
+    const entityList = myDB[entityType];
     const favoriteList = this.favorites[entityType];
 
     // status code 400

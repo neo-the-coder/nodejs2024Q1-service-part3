@@ -1,13 +1,21 @@
-import { IsInt, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import {
+  IsInt,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  IsUUID,
+} from 'class-validator';
 
 export interface CreateAlbumDto {
   name: string;
   year: number;
+  artistId?: string;
 }
 
 export interface UpdateAlbumDto {
   name?: string;
   year?: number;
+  artistId?: string;
 }
 
 export class CreateAlbumDtoClass implements CreateAlbumDto {
@@ -18,6 +26,10 @@ export class CreateAlbumDtoClass implements CreateAlbumDto {
   @IsNotEmpty()
   @IsInt()
   year: number;
+
+  @IsOptional()
+  @IsUUID('4')
+  artistId?: string;
 }
 
 export class UpdateAlbumDtoClass implements UpdateAlbumDto {
@@ -28,4 +40,8 @@ export class UpdateAlbumDtoClass implements UpdateAlbumDto {
   @IsOptional()
   @IsInt()
   year?: number;
+
+  @IsOptional()
+  @IsUUID('4')
+  artistId?: string;
 }

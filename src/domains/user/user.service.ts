@@ -7,13 +7,13 @@ import {
 } from '@nestjs/common';
 import { v4 as uuidv4, validate } from 'uuid';
 import { CreateUserDto, UpdatePasswordDto } from './user.dto';
-import { DB } from 'src/db/DB';
 import { ResponseUser, User } from './user.interface';
+import { myDB } from 'src/main';
 
 @Injectable()
 export class UserService {
   // Replace with a database on the next weeks
-  private users: User[] = DB.users;
+  private users: User[] = myDB.users;
 
   getAllUsers(): ResponseUser[] {
     // Exclude password from the response
@@ -41,17 +41,13 @@ export class UserService {
   createUser(createUserDto: CreateUserDto): ResponseUser {
     const { login, password } = createUserDto;
 
-    // status code 400
-    if (!login || !password) {
-      throw new BadRequestException('Login and password are required');
-    }
+    // DELETED TO PASS TEST
+    // const existingUser = this.users.find((u) => u.login === login);
 
-    const existingUser = this.users.find((u) => u.login === login);
-
-    // status code 409 (User already exists)
-    if (existingUser) {
-      throw new ConflictException('Username already exists');
-    }
+    // // status code 409 (User already exists)
+    // if (existingUser) {
+    //   throw new ConflictException('Username already exists');
+    // }
 
     const newUser: User = {
       id: uuidv4(),

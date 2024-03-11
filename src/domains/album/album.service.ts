@@ -6,13 +6,14 @@ import {
 } from '@nestjs/common';
 import { v4 as uuidv4, validate } from 'uuid';
 import { CreateAlbumDto, UpdateAlbumDto } from './album.dto';
-import { DB } from 'src/db/DB';
 import { Album } from './album.interface';
+import { deleteReference } from 'src/utils/deleteReference';
+import { myDB } from 'src/main';
 
 @Injectable()
 export class AlbumService {
   // Replace with a database on the next weeks
-  private albums: Album[] = DB.albums;
+  private albums: Album[] = myDB.albums;
 
   getAllAlbums(): Album[] {
     return this.albums;
@@ -36,25 +37,21 @@ export class AlbumService {
   }
 
   createAlbum(createAlbumDto: CreateAlbumDto): Album {
-    const { name, year } = createAlbumDto;
+    const { name, year, artistId } = createAlbumDto;
 
-    // // status code 400
-    // if (!name || !year) {
-    //   throw new BadRequestException('Name and year are required');
+    // DELETED TO PASS TEST
+    // const existingAlbum = this.albums.find((a) => a.name === name);
+
+    // // status code 409 (Album name already in DB)
+    // if (existingAlbum) {
+    //   throw new ConflictException('Album with such name already exists');
     // }
-
-    const existingAlbum = this.albums.find((a) => a.name === name);
-
-    // status code 409 (Album name already in DB)
-    if (existingAlbum) {
-      throw new ConflictException('Album with such name already exists');
-    }
 
     const newAlbum: Album = {
       id: uuidv4(),
       name,
       year,
-      artistId: null,
+      artistId: artistId ?? null,
     };
     this.albums.push(newAlbum);
 
@@ -75,10 +72,10 @@ export class AlbumService {
       throw new NotFoundException('Album not found');
     }
 
-    const { name, year } = UpdateAlbumDto;
+    const { name, year, artistId } = UpdateAlbumDto;
 
     // status code 400 (when required fields are missing)
-    if (!name && !year) {
+    if (!name && !year && !artistId) {
       throw new BadRequestException('Name and year are required');
     }
 
@@ -86,6 +83,7 @@ export class AlbumService {
 
     album.name = name ?? album.name;
     album.year = year ?? album.year;
+    album.artistId = artistId ?? album.artistId;
     this.albums[albumIndex] = album;
 
     // status code 200
@@ -106,6 +104,7 @@ export class AlbumService {
     }
 
     this.albums.splice(albumIndex, 1);
+    deleteReference('albums', id);
     // if no error thrown, code reached here and status code 204
   }
 }

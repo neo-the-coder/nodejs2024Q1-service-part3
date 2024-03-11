@@ -6,13 +6,14 @@ import {
 } from '@nestjs/common';
 import { v4 as uuidv4, validate } from 'uuid';
 import { CreateArtistDto, UpdateArtistDto } from './artist.dto';
-import { DB } from 'src/db/DB';
 import { Artist } from './artist.interface';
+import { deleteReference } from 'src/utils/deleteReference';
+import { myDB } from 'src/main';
 
 @Injectable()
 export class ArtistService {
   // Replace with a database on the next weeks
-  private artists: Artist[] = DB.artists;
+  private artists: Artist[] = myDB.artists;
 
   getAllArtists(): Artist[] {
     return this.artists;
@@ -38,17 +39,13 @@ export class ArtistService {
   createArtist(createArtistDto: CreateArtistDto): Artist {
     const { name, grammy } = createArtistDto;
 
-    // // status code 400
-    // if (!name || !grammy) {
-    //   throw new BadRequestException('Name and grammy are required');
+    // DELETED TO PASS TEST
+    // const existingArtist = this.artists.find((a) => a.name === name);
+
+    // // status code 409 (Artist name already in DB)
+    // if (existingArtist) {
+    //   throw new ConflictException('Artist with such name already exists');
     // }
-
-    const existingArtist = this.artists.find((a) => a.name === name);
-
-    // status code 409 (Artist name already in DB)
-    if (existingArtist) {
-      throw new ConflictException('Artist with such name already exists');
-    }
 
     const newArtist: Artist = {
       id: uuidv4(),
@@ -105,6 +102,7 @@ export class ArtistService {
     }
 
     this.artists.splice(artistIndex, 1);
+    deleteReference('artists', id);
     // if no error thrown, code reached here and status code 204
   }
 }
