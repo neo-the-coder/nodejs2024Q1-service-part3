@@ -1,4 +1,4 @@
-export interface User {
+export interface IUser {
   id: string; // uuid v4
   login: string;
   password: string;
@@ -7,4 +7,4 @@ export interface User {
   updatedAt: number; // timestamp of last update
 }
 
-export type ResponseUser = Omit<User, 'password'>;
+export type ResponseUser = Omit<IUser, 'password'>;

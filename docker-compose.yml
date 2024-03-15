@@ -1,0 +1,13 @@
+version: '3'
+services:
+
+  postgres:
+    image: "postgres:14.5"
+    ports:
+      - '${PG_PORT}:${PG_PORT}'
+    environment:
+      PG_PORT: ${PG_PORT}
+      PG_USER: ${PG_USER}
+      PG_PSW: ${PG_PSW}
+      PG_DB: ${PG_DB}
+
