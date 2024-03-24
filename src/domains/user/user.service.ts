@@ -42,11 +42,12 @@ export class UserService {
 
   async createUser(createUserDto: CreateUserDto): Promise<User> {
     // status code 201
-    return await this.userRepository.save({
+    const newUser = this.userRepository.create({
       ...createUserDto,
       createdAt: Date.now(),
       updatedAt: Date.now(),
     });
+    return await this.userRepository.save(newUser);
   }
 
   async updateUserPassword(

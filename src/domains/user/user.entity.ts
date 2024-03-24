@@ -1,4 +1,10 @@
-import { Column, Entity, PrimaryGeneratedColumn, VersionColumn } from 'typeorm';
+import {
+  AfterLoad,
+  Column,
+  Entity,
+  PrimaryGeneratedColumn,
+  VersionColumn,
+} from 'typeorm';
 import { IUser } from './user.interface';
 import { Exclude } from 'class-transformer';
 
@@ -22,4 +28,10 @@ export class User implements IUser {
 
   @Column({ type: 'int8' })
   updatedAt: number;
+
+  @AfterLoad()
+  _convertDates() {
+    this.createdAt = +this.createdAt;
+    this.updatedAt = +this.updatedAt;
+  }
 }
