@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import { Artist } from 'src/domains/artist/artist.entity';
 import { User } from 'src/domains/user/user.entity';
 import { DataSource } from 'typeorm';
 
@@ -9,7 +10,7 @@ export const AppDataSource = new DataSource({
   username: process.env.POSTGRES_USER,
   password: process.env.POSTGRES_PASSWORD,
   database: process.env.POSTGRES_DB,
-  entities: [User],
+  entities: [User, Artist],
   //   migrations: [],
   synchronize: true,
 });

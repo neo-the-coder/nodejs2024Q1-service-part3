@@ -7,6 +7,7 @@ import { ArtistModule } from './domains/artist/artist.module';
 import { AlbumModule } from './domains/album/album.module';
 import { FavoriteModule } from './domains/favs/favs.module';
 import { User } from './domains/user/user.entity';
+import { Artist } from './domains/artist/artist.entity';
 
 @Module({
   imports: [
@@ -21,7 +22,7 @@ import { User } from './domains/user/user.entity';
         username: cfg.get('POSTGRES_USER'),
         password: cfg.get('POSTGRES_PASSWORD'),
         database: cfg.get('POSTGRES_DB'),
-        entities: [User],
+        entities: [User, Artist],
         // migrations: [],
         // migrationsRun: true,
         synchronize: true,

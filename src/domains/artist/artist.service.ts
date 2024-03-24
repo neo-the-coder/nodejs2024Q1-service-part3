@@ -2,30 +2,34 @@ import {
   Injectable,
   NotFoundException,
   BadRequestException,
-  ConflictException,
 } from '@nestjs/common';
 import { v4 as uuidv4, validate } from 'uuid';
 import { CreateArtistDto, UpdateArtistDto } from './artist.dto';
-import { Artist } from './artist.interface';
+import { IArtist } from './artist.interface';
 import { deleteReference } from 'src/utils/deleteReference';
-import { myDB } from 'src/main';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Artist } from './artist.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class ArtistService {
-  // Replace with a database on the next weeks
-  private artists: Artist[] = myDB.artists;
+  constructor(
+    @InjectRepository(Artist)
+    private readonly artistRepository: Repository<Artist>,
+  ) {}
 
-  getAllArtists(): Artist[] {
-    return this.artists;
+  async getAllArtists(): Promise<Artist[]> {
+    // status code 200
+    return this.artistRepository.find();
   }
 
-  getArtistById(id: string): Artist {
+  async getArtistById(id: string): Promise<Artist> {
     // status code 400
     if (!validate(id)) {
       throw new BadRequestException('Not a valid uuid');
     }
 
-    const artist = this.artists.find((a) => a.id === id);
+    const artist: null | Artist = await this.artistRepository.findOneBy({ id });
 
     // status code 404
     if (!artist) {
@@ -36,73 +40,53 @@ export class ArtistService {
     return artist;
   }
 
-  createArtist(createArtistDto: CreateArtistDto): Artist {
-    const { name, grammy } = createArtistDto;
-
-    // DELETED TO PASS TEST
-    // const existingArtist = this.artists.find((a) => a.name === name);
-
-    // // status code 409 (Artist name already in DB)
-    // if (existingArtist) {
-    //   throw new ConflictException('Artist with such name already exists');
-    // }
-
-    const newArtist: Artist = {
-      id: uuidv4(),
-      name,
-      grammy,
-    };
-    this.artists.push(newArtist);
-
+  async createArtist(createArtistDto: CreateArtistDto): Promise<Artist> {
     // status code 201
-    return newArtist;
+    const newArtist = this.artistRepository.create(createArtistDto);
+    return await this.artistRepository.save(newArtist);
   }
 
-  updateArtistInfo(id: string, UpdateArtistDto: UpdateArtistDto): Artist {
+  async updateArtistInfo(
+    id: string,
+    UpdateArtistDto: UpdateArtistDto,
+  ): Promise<Artist> {
     // status code 400
     if (!validate(id)) {
       throw new BadRequestException('Not a valid uuid');
     }
 
-    const artistIndex = this.artists.findIndex((a) => a.id === id);
+    const artist: null | Artist = await this.artistRepository.findOneBy({ id });
 
     // status code 404
-    if (artistIndex === -1) {
+    if (!artist) {
       throw new NotFoundException('Artist not found');
     }
 
-    const { name, grammy } = UpdateArtistDto;
-
     // status code 400 (when required fields are missing)
-    if (!name && grammy === undefined) {
+    if (Object.keys(UpdateArtistDto).length === 0) {
       throw new BadRequestException('Name and grammy are required');
     }
 
-    const artist = this.artists[artistIndex];
-
-    artist.name = name ?? artist.name;
-    artist.grammy = grammy ?? artist.grammy;
-    this.artists[artistIndex] = artist;
-
     // status code 200
-    return artist;
+    await this.artistRepository.update({ id }, UpdateArtistDto);
+    return await this.artistRepository.findOneBy({ id });
   }
 
-  deleteArtist(id: string): void {
+  async deleteArtist(id: string): Promise<void> {
     // status code 400
     if (!validate(id)) {
       throw new BadRequestException('Not a valid uuid');
     }
 
-    const artistIndex = this.artists.findIndex((a) => a.id === id);
+    const artist: null | Artist = await this.artistRepository.findOneBy({ id });
 
     // status code 404
-    if (artistIndex === -1) {
+    if (!artist) {
       throw new NotFoundException('Artist not found');
     }
 
-    this.artists.splice(artistIndex, 1);
+    // status code 204
+    await this.artistRepository.remove(artist);
     deleteReference('artists', id);
-    // if no error thrown, code reached here and status code 204
   }
 }

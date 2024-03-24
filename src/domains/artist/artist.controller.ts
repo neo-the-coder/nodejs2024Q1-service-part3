@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { ArtistService } from './artist.service';
 import { CreateArtistDtoClass, UpdateArtistDtoClass } from './artist.dto';
-import { Artist } from './artist.interface';
+import { Artist } from './artist.entity';
 
 @Controller('artist')
 export class ArtistController {
@@ -20,20 +20,20 @@ export class ArtistController {
   @Get()
   // Prevent Status 304 after 200
   @Header('ETag', ' ')
-  getAllArtists(): Artist[] {
+  getAllArtists(): Promise<Artist[]> {
     return this.artistService.getAllArtists();
   }
 
   @Get(':id')
   // Prevent Status 304 after 200
   @Header('ETag', ' ')
-  getArtistById(@Param('id') id: string): Artist {
+  getArtistById(@Param('id') id: string): Promise<Artist> {
     return this.artistService.getArtistById(id);
   }
 
   @Post()
   @HttpCode(201)
-  createArtist(@Body() createArtistDto: CreateArtistDtoClass): Artist {
+  createArtist(@Body() createArtistDto: CreateArtistDtoClass): Promise<Artist> {
     return this.artistService.createArtist(createArtistDto);
   }
 
@@ -41,13 +41,13 @@ export class ArtistController {
   updateArtistInfo(
     @Param('id') id: string,
     @Body() updateArtistDto: UpdateArtistDtoClass,
-  ): Artist {
+  ): Promise<Artist> {
     return this.artistService.updateArtistInfo(id, updateArtistDto);
   }
 
   @Delete(':id')
   @HttpCode(204)
-  deleteArtist(@Param('id') id: string): void {
+  deleteArtist(@Param('id') id: string): Promise<void> {
     return this.artistService.deleteArtist(id);
   }
 }
