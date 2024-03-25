@@ -31,11 +31,11 @@ export class CreateTrackDtoClass implements CreateTrackDto {
 
   @IsOptional()
   @IsUUID('4')
-  artistId?: string;
+  artistId?: string | null;
 
   @IsOptional()
   @IsUUID('4')
-  albumId?: string;
+  albumId?: string | null;
 }
 
 export class UpdateTrackDtoClass implements UpdateTrackDto {

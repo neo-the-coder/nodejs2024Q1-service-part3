@@ -1,6 +1,6 @@
-import { Album } from '../album/album.interface';
+import { IAlbum } from '../album/album.interface';
 import { IArtist } from '../artist/artist.interface';
-import { Track } from '../track/track.interface';
+import { ITrack } from '../track/track.interface';
 
 // export interface Favorites {
 //   artists: string[]; // favorite artists ids
@@ -10,8 +10,8 @@ import { Track } from '../track/track.interface';
 
 export interface FavoritesResponse {
   artists: IArtist[];
-  albums: Album[];
-  tracks: Track[];
+  albums: IAlbum[];
+  tracks: ITrack[];
 }
 
 export type entityType = 'tracks' | 'artists' | 'albums';

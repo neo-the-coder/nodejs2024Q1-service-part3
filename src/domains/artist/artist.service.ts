@@ -3,9 +3,8 @@ import {
   NotFoundException,
   BadRequestException,
 } from '@nestjs/common';
-import { v4 as uuidv4, validate } from 'uuid';
+import { validate } from 'uuid';
 import { CreateArtistDto, UpdateArtistDto } from './artist.dto';
-import { IArtist } from './artist.interface';
 import { deleteReference } from 'src/utils/deleteReference';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Artist } from './artist.entity';
