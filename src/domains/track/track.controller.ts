@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { TrackService } from './track.service';
 import { CreateTrackDtoClass, UpdateTrackDtoClass } from './track.dto';
-import { Track } from './track.interface';
+import { Track } from './track.entity';
 
 @Controller('track')
 export class TrackController {
@@ -20,20 +20,20 @@ export class TrackController {
   @Get()
   // Prevent Status 304 after 200
   @Header('ETag', ' ')
-  getAllTracks(): Track[] {
+  getAllTracks(): Promise<Track[]> {
     return this.trackService.getAllTracks();
   }
 
   @Get(':id')
   // Prevent Status 304 after 200
   @Header('ETag', ' ')
-  getTrackById(@Param('id') id: string): Track {
+  getTrackById(@Param('id') id: string): Promise<Track> {
     return this.trackService.getTrackById(id);
   }
 
   @Post()
   @HttpCode(201)
-  createTrack(@Body() createTrackDto: CreateTrackDtoClass): Track {
+  createTrack(@Body() createTrackDto: CreateTrackDtoClass): Promise<Track> {
     return this.trackService.createTrack(createTrackDto);
   }
 
@@ -41,13 +41,13 @@ export class TrackController {
   updateTrackInfo(
     @Param('id') id: string,
     @Body() updateTrackDto: UpdateTrackDtoClass,
-  ): Track {
+  ): Promise<Track> {
     return this.trackService.updateTrackInfo(id, updateTrackDto);
   }
 
   @Delete(':id')
   @HttpCode(204)
-  deleteTrack(@Param('id') id: string): void {
+  deleteTrack(@Param('id') id: string): Promise<void> {
     return this.trackService.deleteTrack(id);
   }
 }

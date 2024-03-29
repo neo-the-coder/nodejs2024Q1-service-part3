@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { AlbumService } from './album.service';
 import { CreateAlbumDtoClass, UpdateAlbumDtoClass } from './album.dto';
-import { Album } from './album.interface';
+import { Album } from './album.entity';
 
 @Controller('album')
 export class AlbumController {
@@ -20,20 +20,20 @@ export class AlbumController {
   @Get()
   // Prevent Status 304 after 200
   @Header('ETag', ' ')
-  getAllAlbums(): Album[] {
+  getAllAlbums(): Promise<Album[]> {
     return this.albumService.getAllAlbums();
   }
 
   @Get(':id')
   // Prevent Status 304 after 200
   @Header('ETag', ' ')
-  getAlbumById(@Param('id') id: string): Album {
+  getAlbumById(@Param('id') id: string): Promise<Album> {
     return this.albumService.getAlbumById(id);
   }
 
   @Post()
   @HttpCode(201)
-  createAlbum(@Body() createAlbumDto: CreateAlbumDtoClass): Album {
+  createAlbum(@Body() createAlbumDto: CreateAlbumDtoClass): Promise<Album> {
     return this.albumService.createAlbum(createAlbumDto);
   }
 
@@ -41,13 +41,13 @@ export class AlbumController {
   updateAlbumInfo(
     @Param('id') id: string,
     @Body() updateAlbumDto: UpdateAlbumDtoClass,
-  ): Album {
+  ): Promise<Album> {
     return this.albumService.updateAlbumInfo(id, updateAlbumDto);
   }
 
   @Delete(':id')
   @HttpCode(204)
-  deleteAlbum(@Param('id') id: string): void {
+  deleteAlbum(@Param('id') id: string): Promise<void> {
     return this.albumService.deleteAlbum(id);
   }
 }
