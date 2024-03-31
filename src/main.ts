@@ -7,8 +7,10 @@ import { CustomExceptionFilter } from './utils/customExceptionFilter';
 export const myDB = getDB();
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-  const PORT = process.env.PORT;
+  const app = await NestFactory.create(AppModule, {
+    bufferLogs: true,
+  });
+  const PORT = +process.env.PORT;
   const httpAdapter = app.get(HttpAdapterHost);
   const logger = app.get(LoggingService);
   // const logger = await app.resolve(LoggingService);
@@ -26,14 +28,12 @@ async function bootstrap() {
 
   // Event listeners
   process.on('uncaughtException', (error) => {
-    logger.logError(error);
-    // process.exit(1);
+    logger.error(error);
     throw error;
   });
 
   process.on('unhandledRejection', (reason) => {
-    logger.logError(reason);
-    // process.exit(1);
+    logger.error(reason);
   });
 }
 bootstrap();

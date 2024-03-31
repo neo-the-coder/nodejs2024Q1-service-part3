@@ -1,12 +1,3 @@
-// import {
-//   Catch,
-//   ArgumentsHost,
-//   HttpException,
-//   HttpStatus,
-// } from '@nestjs/common';
-// import { BaseExceptionFilter } from '@nestjs/core';
-// import { LoggingService } from './logging.service';
-
 import {
   Catch,
   ArgumentsHost,
@@ -16,36 +7,11 @@ import {
 import { LoggingService } from './logging/logging.service';
 import { HttpAdapterHost } from '@nestjs/core';
 
-// @Catch()
-// export class CustomExceptionFilter extends BaseExceptionFilter {
-//   constructor(private readonly logger: LoggingService) {
-//     super();
-//   }
-
-//   catch(exception: any, host: ArgumentsHost) {
-//     const ctx = host.switchToHttp();
-//     const response = ctx.getResponse();
-
-//     if (exception instanceof HttpException) {
-//       // Log HTTP exception
-//       this.logger.logError(exception);
-//       super.catch(exception, host);
-//     } else {
-//       // Log unexpected errors
-//       this.logger.logError(exception);
-//       response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-//         statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
-//         message: 'Internal Server Error',
-//       });
-//     }
-//   }
-// }
-
 @Catch()
 export class CustomExceptionFilter implements ExceptionFilter {
   constructor(
-    private readonly loggingService: LoggingService,
     private readonly httpAdapter: HttpAdapterHost,
+    private readonly loggingService: LoggingService,
   ) {}
 
   catch(exception: any, host: ArgumentsHost): void {
@@ -56,7 +22,7 @@ export class CustomExceptionFilter implements ExceptionFilter {
     const statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
 
     // Log error
-    this.loggingService.logError(exception);
+    this.loggingService.error(exception);
 
     const resBody = {
       path: httpAdapter.getRequestUrl(request),
@@ -66,10 +32,5 @@ export class CustomExceptionFilter implements ExceptionFilter {
 
     // send response
     httpAdapter.reply(response, resBody, statusCode);
-
-    // response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-    //   statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
-    //   message: 'Internal Server Error',
-    // });
   }
 }

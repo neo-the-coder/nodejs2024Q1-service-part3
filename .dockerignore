@@ -5,3 +5,4 @@ dist
 Dockerfile
 .dockerignore
 npm-debug.log
+logs
