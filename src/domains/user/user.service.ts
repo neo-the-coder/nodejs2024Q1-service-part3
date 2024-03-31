@@ -8,7 +8,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { validate } from 'uuid';
 import { CreateUserDto, UpdatePasswordDto } from './user.dto';
-import { ResponseUser } from './user.interface';
+import { IUser, ResponseUser } from './user.interface';
 import { User } from './user.entity';
 
 @Injectable()
@@ -94,5 +94,17 @@ export class UserService {
 
     // status code 204
     await this.userRepository.remove(user);
+  }
+
+  async getUserByLogin(login: string): Promise<IUser> {
+    const user: null | User = await this.userRepository.findOneBy({ login });
+
+    // status code 403
+    if (!user) {
+      throw new ForbiddenException('Incorrect user name');
+    }
+
+    // status code 200
+    return user;
   }
 }

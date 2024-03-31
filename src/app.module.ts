@@ -12,6 +12,7 @@ import { Album } from './domains/album/album.entity';
 import { Track } from './domains/track/track.entity';
 import { LoggingMiddleware } from './utils/logging/logging.middleware';
 import { LoggingModule } from './utils/logging/logging.module';
+import { AuthModule } from './domains/auth/auth.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { LoggingModule } from './utils/logging/logging.module';
     AlbumModule,
     FavoriteModule,
     LoggingModule,
+    AuthModule,
   ],
 })
 export class AppModule implements NestModule {

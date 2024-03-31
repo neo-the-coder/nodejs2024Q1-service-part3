@@ -20,7 +20,7 @@ async function bootstrap() {
   // Enable Logger
   app.useLogger(logger);
   // Enable Exception filter
-  app.useGlobalFilters(new CustomExceptionFilter(httpAdapter, logger));
+  // app.useGlobalFilters(new CustomExceptionFilter(httpAdapter, logger));
 
   await app.listen(PORT);
 
@@ -35,5 +35,8 @@ async function bootstrap() {
   process.on('unhandledRejection', (reason) => {
     logger.error(reason);
   });
+
+  // throw Error('oops from main')
+  // process.emit('rejectionHandled', Promise.reject('value on reject'))
 }
 bootstrap();
