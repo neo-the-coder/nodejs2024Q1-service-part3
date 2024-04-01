@@ -8,8 +8,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { validate } from 'uuid';
 import { CreateUserDto, UpdatePasswordDto } from './user.dto';
-import { ResponseUser } from './user.interface';
+import { IUser, ResponseUser } from './user.interface';
 import { User } from './user.entity';
+import { hash } from 'bcrypt';
 
 @Injectable()
 export class UserService {
@@ -44,6 +45,7 @@ export class UserService {
     // status code 201
     const newUser = this.userRepository.create({
       ...createUserDto,
+      password: await hash(createUserDto.password, 10),
       createdAt: Date.now(),
       updatedAt: Date.now(),
     });
@@ -74,7 +76,7 @@ export class UserService {
     // status code 200
     await this.userRepository.update(
       { id },
-      { password: newPassword, updatedAt: Date.now() },
+      { password: await hash(newPassword, 10), updatedAt: Date.now() },
     );
     return await this.userRepository.findOneBy({ id });
   }
@@ -94,5 +96,17 @@ export class UserService {
 
     // status code 204
     await this.userRepository.remove(user);
+  }
+
+  async getUserByLogin(login: string): Promise<IUser> {
+    const user: null | User = await this.userRepository.findOneBy({ login });
+
+    // status code 403
+    if (!user) {
+      throw new ForbiddenException('Incorrect user name');
+    }
+
+    // status code 200
+    return user;
   }
 }
