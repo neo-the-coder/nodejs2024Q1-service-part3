@@ -10,6 +10,7 @@ import { validate } from 'uuid';
 import { CreateUserDto, UpdatePasswordDto } from './user.dto';
 import { IUser, ResponseUser } from './user.interface';
 import { User } from './user.entity';
+import { hash } from 'bcrypt';
 
 @Injectable()
 export class UserService {
@@ -44,6 +45,7 @@ export class UserService {
     // status code 201
     const newUser = this.userRepository.create({
       ...createUserDto,
+      password: await hash(createUserDto.password, 10),
       createdAt: Date.now(),
       updatedAt: Date.now(),
     });
@@ -74,7 +76,7 @@ export class UserService {
     // status code 200
     await this.userRepository.update(
       { id },
-      { password: newPassword, updatedAt: Date.now() },
+      { password: await hash(newPassword, 10), updatedAt: Date.now() },
     );
     return await this.userRepository.findOneBy({ id });
   }
